@@ -19,7 +19,7 @@ namespace Keryhe.Polling.Delay
             _previousWait = 0;
             _wait = 1;
             _minWait = 1;
-            _maxWait = 60;
+            _maxWait = options.Value.MaxWait;
             _logger = logger;
         }
 
@@ -57,7 +57,6 @@ namespace Keryhe.Polling.Delay
 
     public class FibonacciOptions
     {
-        public int MinWait;
         public int MaxWait;
     }
 }

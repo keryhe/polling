@@ -14,10 +14,10 @@ namespace Keryhe.Polling.Delay
         private readonly ILogger<ExponentialDelay> _logger;
 
         public ExponentialDelay(IOptions<ExponentialOptions> options, ILogger<ExponentialDelay> logger)
-        {
-            _wait = 1;
-            _minWait = 1;
-            _maxWait = 60;
+        { 
+            _minWait = options.Value.MinWait;
+            _maxWait = options.Value.MaxWait;
+            _wait = _minWait;
             _logger = logger;
         }
 
