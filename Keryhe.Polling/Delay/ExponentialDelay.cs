@@ -8,8 +8,8 @@ namespace Keryhe.Polling.Delay
     public class ExponentialDelay : IDelay, IDisposable
     {
         private int _wait;
-        private int _minWait;
-        private int _maxWait;
+        private readonly int _minWait;
+        private readonly int _maxWait;
         private static ManualResetEvent _resetEvent = new ManualResetEvent(false);
         private readonly ILogger<ExponentialDelay> _logger;
 
@@ -52,7 +52,7 @@ namespace Keryhe.Polling.Delay
 
     public class ExponentialOptions
     {
-        public int MinWait;
-        public int MaxWait;
+        public int MinWait { get; set; }
+        public int MaxWait { get; set; }
     }
 }
