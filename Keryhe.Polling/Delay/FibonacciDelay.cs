@@ -11,7 +11,7 @@ namespace Keryhe.Polling.Delay
         private int _wait;
         private readonly int _minWait;
         private readonly int _maxWait;
-        private static ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private ManualResetEvent _resetEvent = new ManualResetEvent(false);
         private readonly ILogger<FibonacciDelay> _logger;
 
         public FibonacciDelay(IOptions<FibonacciOptions> options, ILogger<FibonacciDelay> logger)

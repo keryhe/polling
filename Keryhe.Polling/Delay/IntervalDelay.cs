@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading;
 
@@ -6,13 +7,13 @@ namespace Keryhe.Polling.Delay
 {
     public class IntervalDelay : IDelay, IDisposable
     {
-        private int _wait;
+        private readonly int _wait;
         private static ManualResetEvent _resetEvent = new ManualResetEvent(false);
         private readonly ILogger<IntervalDelay> _logger;
 
-        public IntervalDelay(ILogger<IntervalDelay> logger)
+        public IntervalDelay(IOptions<IntervalOptions> options, ILogger<IntervalDelay> logger)
         {
-            _wait = 1;
+            _wait = options.Value.Wait;
             _logger = logger;
         }
 
@@ -37,5 +38,10 @@ namespace Keryhe.Polling.Delay
         {
             _resetEvent.Close();
         }
+    }
+
+    public class IntervalOptions
+    {
+        public int Wait { get; set; }
     }
 }

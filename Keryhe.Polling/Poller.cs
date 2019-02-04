@@ -37,13 +37,14 @@ namespace Keryhe.Polling
                     _delay.Reset();
                 }
             }
+
+            _logger.LogDebug("Polling stopped");
         }
 
         public void Stop()
         {
             _status = false;
             _delay.Cancel();
-            _logger.LogDebug("Polling stopped");
         }
 
         protected abstract List<T> Poll();
