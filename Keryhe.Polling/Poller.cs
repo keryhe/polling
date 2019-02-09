@@ -47,6 +47,10 @@ namespace Keryhe.Polling
             _delay.Cancel();
         }
 
+        public virtual void Dispose()
+        {
+        }
+
         protected abstract List<T> Poll();
     }
 }
