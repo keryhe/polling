@@ -5,16 +5,21 @@ using System.Threading;
 
 namespace Keryhe.Polling.Delay
 {
-    public class IntervalDelay : IDelay, IDisposable
+    public class ConstantDelay : IDelay, IDisposable
     {
-        private readonly int _wait;
         private static ManualResetEvent _resetEvent = new ManualResetEvent(false);
-        private readonly ILogger<IntervalDelay> _logger;
+        private readonly ILogger<ConstantDelay> _logger;
+        private readonly int _wait;
 
-        public IntervalDelay(IOptions<IntervalOptions> options, ILogger<IntervalDelay> logger)
+        public ConstantDelay(ConstantOptions options, ILogger<ConstantDelay> logger)
         {
-            _wait = options.Value.Wait;
+            _wait = options.Interval;
             _logger = logger;
+        }
+
+        public ConstantDelay(IOptions<ConstantOptions> options, ILogger<ConstantDelay> logger)
+            : this(options.Value, logger)
+        {
         }
 
         public void Wait()
@@ -40,8 +45,8 @@ namespace Keryhe.Polling.Delay
         }
     }
 
-    public class IntervalOptions
+    public class ConstantOptions
     {
-        public int Wait { get; set; }
+        public int Interval { get; set; }
     }
 }

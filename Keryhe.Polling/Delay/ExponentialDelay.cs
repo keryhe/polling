@@ -7,18 +7,23 @@ namespace Keryhe.Polling.Delay
 {
     public class ExponentialDelay : IDelay, IDisposable
     {
-        private int _wait;
-        private readonly int _minWait;
-        private readonly int _maxWait;
         private static ManualResetEvent _resetEvent = new ManualResetEvent(false);
         private readonly ILogger<ExponentialDelay> _logger;
+        private readonly int _maxWait;
+        private readonly int _factor;
+        private int _wait;
+
+        public ExponentialDelay(ExponentialOptions options, ILogger<ExponentialDelay> logger)
+        {
+            _factor = options.Factor;
+            _wait = 1;
+            _maxWait = options.MaxWait;
+            _logger = logger;
+        }
 
         public ExponentialDelay(IOptions<ExponentialOptions> options, ILogger<ExponentialDelay> logger)
-        { 
-            _minWait = options.Value.MinWait;
-            _maxWait = options.Value.MaxWait;
-            _wait = _minWait;
-            _logger = logger;
+            :this(options.Value, logger)
+        {
         }
 
         public void Wait()
@@ -28,7 +33,7 @@ namespace Keryhe.Polling.Delay
 
             if (_wait < _maxWait)
             {
-                _wait = _wait * 2;
+                _wait = _wait * _factor;
             }
         }
 
@@ -41,7 +46,7 @@ namespace Keryhe.Polling.Delay
         public void Reset()
         {
             _logger.LogDebug("Resetting ExponentialDelay");
-            _wait = _minWait;
+            _wait = 1;
         }
 
         public void Dispose()
@@ -52,7 +57,7 @@ namespace Keryhe.Polling.Delay
 
     public class ExponentialOptions
     {
-        public int MinWait { get; set; }
+        public int Factor { get; set; }
         public int MaxWait { get; set; }
     }
 }

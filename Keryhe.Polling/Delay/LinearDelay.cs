@@ -1,28 +1,30 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 
 namespace Keryhe.Polling.Delay
 {
-    public class FibonacciDelay : IDelay, IDisposable
+    public class LinearDelay : IDelay, IDisposable
     {
-        private ManualResetEvent _resetEvent = new ManualResetEvent(false);
-        private readonly ILogger<FibonacciDelay> _logger;
+        private static ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly ILogger<ConstantDelay> _logger;
+        private readonly int _increment;
         private readonly int _maxWait;
-        private int _previousWait;
         private int _wait;
 
-        public FibonacciDelay(FibonacciOptions options, ILogger<FibonacciDelay> logger)
+        public LinearDelay(LinearOptions options, ILogger<ConstantDelay> logger)
         {
-            _previousWait = 0;
+            _increment = options.Increment;
             _wait = 1;
             _maxWait = options.MaxWait;
             _logger = logger;
         }
 
-        public FibonacciDelay(IOptions<FibonacciOptions> options, ILogger<FibonacciDelay> logger)
-            : this(options.Value, logger)
+        public LinearDelay(IOptions<LinearOptions> options, ILogger<ConstantDelay> logger)
+            : this (options.Value, logger)
         {
         }
 
@@ -33,23 +35,20 @@ namespace Keryhe.Polling.Delay
 
             if (_wait < _maxWait)
             {
-                int currentWait = _wait;
-                _wait = _previousWait + currentWait;
-                _previousWait = currentWait;
+                _wait = _wait + _increment;
             }
         }
 
         public void Cancel()
         {
-            _logger.LogDebug("Cancelling FibonacciDelay");
+            _logger.LogDebug("Cancelling LinearDelay");
             _resetEvent.Set();
         }
 
         public void Reset()
         {
-            _logger.LogDebug("Resetting FibonacciDelay");
+            _logger.LogDebug("Resetting LinearDelay");
             _wait = 1;
-            _previousWait = 0;
         }
 
         public void Dispose()
@@ -58,8 +57,9 @@ namespace Keryhe.Polling.Delay
         }
     }
 
-    public class FibonacciOptions
+    public class LinearOptions
     {
+        public int Increment { get; set; }
         public int MaxWait { get; set; }
     }
 }
