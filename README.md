@@ -46,7 +46,7 @@ Implementers of the IDelay interface specify the amount of time to wait if no da
     ```
 - **LinearDelay** - Adds a given value to the wait time.
     ```json
-    "FibonacciOptions": 
+    "LinearOptions": 
     {
         "Increment": 1,
         "MaxWait": 60
